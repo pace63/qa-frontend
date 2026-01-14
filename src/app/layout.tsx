@@ -28,6 +28,24 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof window !== 'undefined') {
+                const removePortal = () => {
+                  const portal = document.querySelector('nextjs-portal');
+                  if (portal) {
+                    portal.remove();
+                  }
+                };
+                removePortal();
+                // 監聽 DOM 變化，確保移除動態添加的 portal
+                const observer = new MutationObserver(removePortal);
+                observer.observe(document.body, { childList: true, subtree: true });
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   );
